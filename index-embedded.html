@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ian Brueggeman</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: #fafafa;
+      color: #1a1a1a;
+      line-height: 1.7;
+      font-size: 16px;
+      position: relative;
+    }
+    .model-viewer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 50%;
+      height: 100vh;
+      background: transparent;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    .model-viewer.visible {
+      opacity: 1;
+    }
+    .model-viewer canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .container {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 64px 24px 150vh 24px;
+      animation: fadeIn 0.8s ease-in;
+      position: relative;
+      z-index: 1;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 400;
+      margin-bottom: 32px;
+      transition: color 0.3s ease;
+      cursor: default;
+    }
+    h1:hover {
+      color: #555;
+    }
+    p {
+      margin-bottom: 24px;
+      color: #333;
+    }
+    ul {
+      margin-bottom: 24px;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 8px;
+      color: #333;
+    }
+    a {
+      color: #1a1a1a;
+      text-decoration: underline;
+      transition: opacity 0.2s;
+    }
+    a:hover {
+      opacity: 0.6;
+    }
+    .links {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .links span {
+      color: #ccc;
+    }
+    .spacer {
+      height: 16px;
+    }
+    .section-spacer {
+      height: 40px;
+    }
+    @media (max-width: 768px) {
+      .container {
+        padding: 48px 20px 100vh 20px;
+      }
+      h1 {
+        font-size: 22px;
+      }
+      .model-viewer {
+        width: 100%;
+        height: 40vh;
+        top: auto;
+        bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="model-viewer" id="modelViewer"></div>
+  
+  <div class="container">
+    <h1>Ian Brueggeman</h1>
+    <p>
+      Hey! I'm Ian Brueggeman, a Mechanical Engineering student at South Dakota State University.
+    </p>
+    <p>
+      I design, build, and compete.
+    </p>
+    <p>
+      I previously:
+    </p>
+    <ul>
+      <li>Designed smart-glasses hardware at <a href="https://build.ai" target="_blank">Build.ai</a>: concept to mass manufacturing in Shenzhen</li>
+      <li>Earned a patent for smart wearable device system with power-optimized image capture</li>
+      <li>Won the VEX Robotics World Championship twice (10,000+ teams)</li>
+      <li>Founded the JACKS VEX U team at SDSU: Excellence Award at Worlds, 2nd in global skills, raised $50K+ in funding</li>
+      <li>Won Autodesk Make It Real CAD Challenge (National Champion 2022, 2× National Finalist)</li>
+      <li>Founded ENEN Design: $16K+ revenue in 2025 with 6-printer in-house manufacturing setup</li>
+      <li>Invented a new type of differential cycloidal gearbox, reducing part count by over 30%</li>
+      <li>Designed and fabricated 3lb combat robots</li>
+    </ul>
+    <div class="section-spacer"></div>
+    <p>
+      I believe:
+    </p>
+    <ul>
+      <li>The best way to learn is by building</li>
+      <li>Good engineering is simple, elegant, and functional</li>
+      <li>Competition brings out the best in people</li>
+    </ul>
+    <div class="spacer"></div>
+    <p>
+      Currently exploring opportunities in mechanical engineering, robotics, and product design.
+    </p>
+    <div class="spacer"></div>
+    <p>
+      <a href="mailto:ianbrueggeman@gmail.com">ianbrueggeman@gmail.com</a>
+    </p>
+    <p class="links">
+      <a href="./resume.pdf" target="_blank">Resume</a>
+      <span>|</span>
+      <a href="https://linkedin.com/in/ianbrueggeman" target="_blank">LinkedIn</a>
+      <span>|</span>
+      <a href="https://x.com/enen_design" target="_blank">X</a>
+    </p>
+  </div>
+  
+  <script src="glasses_mesh.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    window.addEventListener('load', function() {
+      console.log('Initializing 3D viewer...');
+      
+      if (typeof THREE === 'undefined') {
+        console.error('Three.js failed to load');
+        return;
+      }
+      
+      if (typeof glassesVertices === 'undefined') {
+        console.error('Mesh data failed to load');
+        return;
+      }
+      
+      const container = document.getElementById('modelViewer');
+      
+      // Set up scene
+      const scene = new THREE.Scene();
+      scene.background = null;
+      
+      const camera = new THREE.PerspectiveCamera(35, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+      camera.position.set(150, 80, 150);
+      
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(container.offsetWidth, container.offsetHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setClearColor(0x000000, 0);
+      container.appendChild(renderer.domElement);
+      
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
+      
+      const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.6);
+      directionalLight1.position.set(100, 100, 100);
+      scene.add(directionalLight1);
+      
+      const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.3);
+      directionalLight2.position.set(-100, -50, -100);
+      scene.add(directionalLight2);
+      
+      // Create geometry from embedded data
+      const geometry = new THREE.BufferGeometry();
+      const vertices = new Float32Array(glassesVertices);
+      geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+      geometry.computeVertexNormals();
+      
+      // Center the geometry
+      geometry.computeBoundingBox();
+      const center = new THREE.Vector3();
+      geometry.boundingBox.getCenter(center);
+      geometry.translate(-center.x, -center.y, -center.z);
+      
+      const material = new THREE.MeshStandardMaterial({
+        color: 0x3498db,
+        metalness: 0.5,
+        roughness: 0.4,
+        flatShading: false
+      });
+      
+      const model = new THREE.Mesh(geometry, material);
+      model.rotation.x = -0.2;
+      model.rotation.y = 0.3;
+      scene.add(model);
+      
+      console.log('3D model loaded successfully!');
+      
+      let scrollProgress = 0;
+      
+      // Scroll animation
+      function updateScroll() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        scrollProgress = Math.min(scrollTop / (docHeight * 0.6), 1);
+        
+        if (scrollProgress > 0.1) {
+          container.classList.add('visible');
+        } else {
+          container.classList.remove('visible');
+        }
+        
+        // Rotate based on scroll
+        model.rotation.y = 0.3 + scrollProgress * Math.PI * 2;
+        model.rotation.x = -0.2 + scrollProgress * 0.5;
+        
+        // Scale pulse
+        const scale = 1 + Math.sin(scrollProgress * Math.PI) * 0.12;
+        model.scale.set(scale, scale, scale);
+      }
+      
+      window.addEventListener('scroll', updateScroll);
+      updateScroll();
+      
+      // Animation loop
+      function animate() {
+        requestAnimationFrame(animate);
+        model.rotation.y += 0.002;
+        renderer.render(scene, camera);
+      }
+      animate();
+      
+      // Resize handler
+      window.addEventListener('resize', () => {
+        camera.aspect = container.offsetWidth / container.offsetHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.offsetWidth, container.offsetHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      });
+    });
+  </script>
+</body>
+</html>
