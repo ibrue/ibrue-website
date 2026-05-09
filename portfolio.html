@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio — Ian Brueggeman</title>
+  <meta name="description" content="Portfolio of Ian Brueggeman: smart-glasses hardware, cycloidal gearboxes, combat robots, and competition robotics. Mechanical engineering, product design, and robotics.">
+  <meta name="author" content="Ian Brueggeman">
+
+  <meta property="og:title" content="Portfolio — Ian Brueggeman">
+  <meta property="og:description" content="Mechanical engineering portfolio: smart-glasses hardware, novel cycloidal gearboxes, combat robots, and championship-winning competition robotics.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ianbrueggeman.com/portfolio.html">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="canonical" href="https://ianbrueggeman.com/portfolio.html">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Ian Brueggeman",
+    "url": "https://ianbrueggeman.com",
+    "email": "ianbrueggeman@gmail.com",
+    "jobTitle": "Mechanical Engineering Student",
+    "alumniOf": {
+      "@type": "CollegeOrUniversity",
+      "name": "South Dakota State University"
+    },
+    "knowsAbout": ["Mechanical Engineering", "Robotics", "Product Design", "CAD", "Manufacturing", "Smart Wearables"],
+    "sameAs": [
+      "https://linkedin.com/in/ianbrueggeman",
+      "https://x.com/enen_design"
+    ]
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #fafafa;
+      --fg: #1a1a1a;
+      --muted: #555;
+      --rule: rgba(0,0,0,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.7;
+      font-size: 16px;
+      transition: background 0.6s ease, color 0.6s ease;
+      overflow-x: hidden;
+    }
+
+    /* Dark mode kicks in once you scroll past the intro */
+    body.dark {
+      --bg: #0a0a0a;
+      --fg: #f0f0f0;
+      --muted: #999;
+      --rule: rgba(255,255,255,0.12);
+    }
+
+    a {
+      color: var(--fg);
+      text-decoration: underline;
+      transition: opacity 0.2s;
+    }
+    a:hover { opacity: 0.6; }
+
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      font-size: 14px;
+      mix-blend-mode: difference;
+      color: #fff;
+      pointer-events: none;
+    }
+    .nav a { color: #fff; pointer-events: auto; text-decoration: none; }
+    .nav a:hover { opacity: 0.7; }
+
+    /* Intro: white screen that frames the transition */
+    .intro {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 24px;
+      position: relative;
+    }
+    .intro h1 {
+      font-size: 48px;
+      font-weight: 400;
+      margin-bottom: 24px;
+      letter-spacing: -0.5px;
+    }
+    .intro p {
+      max-width: 480px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+    .scroll-hint {
+      position: absolute;
+      bottom: 48px;
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: bob 2s ease-in-out infinite;
+    }
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); opacity: 0.6; }
+      50% { transform: translateY(6px); opacity: 1; }
+    }
+
+    /* The transition zone — gradient that crossfades to black */
+    .transition {
+      height: 60vh;
+      background: linear-gradient(to bottom, #fafafa 0%, #0a0a0a 100%);
+    }
+
+    /* Project layout */
+    .project {
+      min-height: 100vh;
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 120px 48px;
+      align-items: center;
+    }
+
+    .project-info { position: relative; z-index: 2; }
+
+    .project-tag {
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .project-title {
+      font-size: 40px;
+      font-weight: 400;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+    .project-subtitle {
+      font-size: 18px;
+      color: var(--muted);
+      margin-bottom: 32px;
+      font-style: italic;
+    }
+    .project-section { margin-bottom: 28px; }
+    .project-section h3 {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+      border-top: 1px solid var(--rule);
+      padding-top: 16px;
+    }
+    .project-section p, .project-section li { font-size: 15px; color: var(--fg); }
+    .project-section ul { padding-left: 20px; margin-top: 4px; }
+    .project-section li { margin-bottom: 6px; }
+
+    .meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+    .meta div span:first-child {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    /* Sticky 3D viewer per project */
+    .project-viewer {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .project-viewer canvas { display: block; }
+
+    .viewer-loading {
+      position: absolute;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* Footer */
+    .footer {
+      padding: 80px 48px 48px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--muted);
+      border-top: 1px solid var(--rule);
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .footer a { margin: 0 12px; }
+
+    @media (max-width: 768px) {
+      .project {
+        grid-template-columns: 1fr;
+        padding: 80px 24px;
+        gap: 24px;
+      }
+      .project-viewer {
+        position: relative;
+        height: 60vh;
+        order: -1;
+      }
+      .project-title { font-size: 32px; }
+      .intro h1 { font-size: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="./index.html">← Ian Brueggeman</a>
+    <a href="mailto:ianbrueggeman@gmail.com">Get in touch</a>
+  </nav>
+
+  <section class="intro">
+    <h1>Selected Work</h1>
+    <p>
+      Hardware, mechanisms, and robots I've designed, built, and shipped.
+      Scroll to explore each project in 3D.
+    </p>
+    <div class="scroll-hint">Scroll ↓</div>
+  </section>
+
+  <div class="transition"></div>
+
+  <!-- Project: Smart Glasses -->
+  <article class="project" id="smart-glasses">
+    <div class="project-info">
+      <div class="project-tag">2024 — Build.ai</div>
+      <h2 class="project-title">Smart Glasses Hardware</h2>
+      <p class="project-subtitle">From concept to mass manufacturing in Shenzhen.</p>
+
+      <div class="meta">
+        <div><span>Role</span><span>Hardware design</span></div>
+        <div><span>Status</span><span>Patented · Manufactured</span></div>
+        <div><span>Tools</span><span>Fusion 360, DFM</span></div>
+        <div><span>Output</span><span>Production tooling</span></div>
+      </div>
+
+      <div class="project-section">
+        <h3>Problem</h3>
+        <p>
+          Smart glasses live or die on weight, battery, and how they sit on a face.
+          We needed an internal mounting system that could hold optics and electronics
+          rigidly, survive drop tests, and still come apart cleanly on the assembly line
+          in Shenzhen.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h3>Approach</h3>
+        <p>
+          The piece you're rotating is a side-mount bracket — one of several iterations.
+          It anchors the temple-arm electronics to the frame while isolating the optical
+          module from flex. Designed around injection-molding draft, with snap features
+          and locating bosses tuned for high-volume assembly.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h3>Outcome</h3>
+        <ul>
+          <li>Concept → DFM → tooling → mass production</li>
+          <li>Co-inventor on patent for power-optimized image capture in smart wearables</li>
+          <li>Worked directly with manufacturing partners in Shenzhen</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-viewer" data-model="./models/glasses-side-mount.glb" data-color="0xc0c0c0">
+      <div class="viewer-loading">Loading model…</div>
+    </div>
+  </article>
+
+  <footer class="footer">
+    <p>More projects coming — cycloidal gearbox, combat robots, JACKS VEX U.</p>
+    <p style="margin-top:24px;">
+      <a href="./index.html">Home</a>
+      <a href="./resume.pdf" target="_blank">Resume</a>
+      <a href="https://linkedin.com/in/ianbrueggeman" target="_blank">LinkedIn</a>
+      <a href="mailto:ianbrueggeman@gmail.com">Email</a>
+    </p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script>
+    // Toggle dark mode based on scroll position past the transition zone
+    const transitionEl = document.querySelector('.transition');
+    function updateTheme() {
+      const rect = transitionEl.getBoundingClientRect();
+      const triggerPoint = window.innerHeight * 0.5;
+      if (rect.bottom < triggerPoint) {
+        document.body.classList.add('dark');
+      } else {
+        document.body.classList.remove('dark');
+      }
+    }
+    window.addEventListener('scroll', updateTheme, { passive: true });
+    updateTheme();
+
+    // Each .project-viewer gets its own scene and loads its own glb
+    const viewers = document.querySelectorAll('.project-viewer[data-model]');
+
+    viewers.forEach((container) => {
+      const modelUrl = container.dataset.model;
+      const colorHex = parseInt(container.dataset.color || '0xcccccc', 16);
+      const loadingEl = container.querySelector('.viewer-loading');
+
+      const scene = new THREE.Scene();
+
+      const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 2000);
+      camera.position.set(180, 100, 220);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.outputEncoding = THREE.sRGBEncoding;
+      container.appendChild(renderer.domElement);
+
+      function resize() {
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      // Studio-style three-point lighting
+      scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+      const key = new THREE.DirectionalLight(0xffffff, 0.9);
+      key.position.set(150, 200, 150);
+      scene.add(key);
+      const fill = new THREE.DirectionalLight(0xaab8ff, 0.35);
+      fill.position.set(-200, 80, -150);
+      scene.add(fill);
+      const rim = new THREE.DirectionalLight(0xffffff, 0.5);
+      rim.position.set(0, -150, -200);
+      scene.add(rim);
+
+      let model = null;
+      let baseRotationY = 0;
+      let modelHeight = 0;
+
+      const loader = new THREE.GLTFLoader();
+      loader.load(
+        modelUrl,
+        (gltf) => {
+          model = gltf.scene;
+
+          const material = new THREE.MeshStandardMaterial({
+            color: colorHex,
+            metalness: 0.7,
+            roughness: 0.35,
+          });
+          model.traverse((child) => {
+            if (child.isMesh) {
+              child.material = material;
+              child.geometry.computeVertexNormals();
+            }
+          });
+
+          // Center + scale to fit viewport
+          const box = new THREE.Box3().setFromObject(model);
+          const size = new THREE.Vector3();
+          const center = new THREE.Vector3();
+          box.getSize(size);
+          box.getCenter(center);
+          const maxDim = Math.max(size.x, size.y, size.z);
+          const scale = 100 / maxDim;
+          model.scale.setScalar(scale);
+          model.position.sub(center.multiplyScalar(scale));
+          modelHeight = size.y * scale;
+
+          scene.add(model);
+          if (loadingEl) loadingEl.style.display = 'none';
+        },
+        undefined,
+        (err) => {
+          console.error('Failed to load', modelUrl, err);
+          if (loadingEl) loadingEl.textContent = 'Could not load model.';
+        }
+      );
+
+      // Per-viewer scroll-driven rotation: tied to how far the parent project
+      // has scrolled through the viewport
+      const projectEl = container.closest('.project');
+      function getScrollProgress() {
+        const rect = projectEl.getBoundingClientRect();
+        const total = rect.height + window.innerHeight;
+        const scrolled = window.innerHeight - rect.top;
+        return Math.max(0, Math.min(1, scrolled / total));
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        if (model) {
+          const p = getScrollProgress();
+          // Scroll drives most of the rotation; gentle continuous spin layered on
+          baseRotationY += 0.0015;
+          model.rotation.y = baseRotationY + p * Math.PI * 2;
+          model.rotation.x = -0.25 + p * 0.4;
+        }
+        renderer.render(scene, camera);
+      }
+      animate();
+    });
+  </script>
+</body>
+</html>
