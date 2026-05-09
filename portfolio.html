@@ -321,6 +321,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
   <script>
     // Toggle dark mode based on scroll position past the transition zone
     const transitionEl = document.querySelector('.transition');
@@ -381,6 +382,9 @@
       let modelHeight = 0;
 
       const loader = new THREE.GLTFLoader();
+      const dracoLoader = new THREE.DRACOLoader();
+      dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/');
+      loader.setDRACOLoader(dracoLoader);
       loader.load(
         modelUrl,
         (gltf) => {

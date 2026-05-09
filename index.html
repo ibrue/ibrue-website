@@ -99,6 +99,30 @@
       align-items: center;
       flex-wrap: wrap;
     }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 22px;
+      background: #1a1a1a;
+      color: #fafafa;
+      text-decoration: none;
+      border-radius: 999px;
+      font-size: 15px;
+      transition: background 0.2s, transform 0.2s;
+      margin: 8px 0 16px;
+    }
+    .cta:hover {
+      background: #000;
+      opacity: 1;
+      transform: translateY(-1px);
+    }
+    .cta .arrow {
+      transition: transform 0.2s;
+    }
+    .cta:hover .arrow {
+      transform: translateX(3px);
+    }
     .links span {
       color: #ccc;
     }
@@ -138,6 +162,9 @@
     <p>
       I design, build, and compete.
     </p>
+    <a href="./portfolio.html" class="cta">
+      View my work in 3D <span class="arrow">→</span>
+    </a>
     <p>
       I previously:
     </p>
