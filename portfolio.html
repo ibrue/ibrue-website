@@ -304,7 +304,7 @@
       </div>
     </div>
 
-    <div class="project-viewer" data-model="./models/glasses-side-mount.glb" data-color="0xc0c0c0">
+    <div class="project-viewer" data-model="./models/glasses-side-mount.glb">
       <div class="viewer-loading">Loading model…</div>
     </div>
   </article>
@@ -342,7 +342,6 @@
 
     viewers.forEach((container) => {
       const modelUrl = container.dataset.model;
-      const colorHex = parseInt(container.dataset.color || '0xcccccc', 16);
       const loadingEl = container.querySelector('.viewer-loading');
 
       const scene = new THREE.Scene();
@@ -390,15 +389,12 @@
         (gltf) => {
           model = gltf.scene;
 
-          const material = new THREE.MeshStandardMaterial({
-            color: colorHex,
-            metalness: 0.7,
-            roughness: 0.35,
-          });
+          // Use the materials baked into the glb — keeps per-part colors from Fusion
           model.traverse((child) => {
-            if (child.isMesh) {
-              child.material = material;
-              child.geometry.computeVertexNormals();
+            if (child.isMesh && child.material) {
+              child.material.metalness = 0.6;
+              child.material.roughness = 0.4;
+              if (child.geometry) child.geometry.computeVertexNormals();
             }
           });
 
