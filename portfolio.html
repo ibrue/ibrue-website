@@ -10,10 +10,10 @@
   <meta property="og:title" content="Portfolio — Ian Brueggeman">
   <meta property="og:description" content="Mechanical engineering portfolio: smart-glasses hardware, novel cycloidal gearboxes, combat robots, and championship-winning competition robotics.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ianbrueggeman.com/portfolio.html">
+  <meta property="og:url" content="https://ibrue.com/portfolio.html">
   <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="canonical" href="https://ianbrueggeman.com/portfolio.html">
+  <link rel="canonical" href="https://ibrue.com/portfolio.html">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
 
   <script type="application/ld+json">
@@ -21,7 +21,7 @@
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Ian Brueggeman",
-    "url": "https://ianbrueggeman.com",
+    "url": "https://ibrue.com",
     "email": "ianbrueggeman@gmail.com",
     "jobTitle": "Mechanical Engineering Student",
     "alumniOf": {
@@ -54,8 +54,10 @@
       color: var(--fg);
       line-height: 1.7;
       font-size: 16px;
-      transition: background 0.6s ease, color 0.6s ease;
-      overflow-x: hidden;
+      /* No transition on the theme flip: it happens while the gradient panel
+         fills the viewport, so an instant swap is seamless and a fade is not.
+         Also deliberately no overflow-x:hidden — it would make body a scroll
+         container and silently break position:sticky on the model viewers. */
     }
 
     /* Dark mode kicks in once you scroll past the intro */
@@ -82,12 +84,26 @@
       align-items: center;
       z-index: 100;
       font-size: 14px;
-      mix-blend-mode: difference;
-      color: #fff;
       pointer-events: none;
+      color: var(--fg);
     }
-    .nav a { color: #fff; pointer-events: auto; text-decoration: none; }
-    .nav a:hover { opacity: 0.7; }
+    /* Scrim so page content scrolling underneath never collides with the nav */
+    .nav::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, var(--bg) 65%, transparent);
+      z-index: -1;
+      height: 150%;
+      transition: background 0.25s ease;
+    }
+    .nav a {
+      color: var(--fg);
+      pointer-events: auto;
+      text-decoration: none;
+      transition: opacity 0.2s, color 0.25s ease;
+    }
+    .nav a:hover { opacity: 0.6; }
 
     /* Intro: white screen that frames the transition */
     .intro {
@@ -125,15 +141,21 @@
       50% { transform: translateY(6px); opacity: 1; }
     }
 
-    /* The transition zone — gradient that crossfades to black */
+    /* The transition zone. Full viewport height so that at the moment the
+       theme flips, this panel covers the screen edge to edge — the swap
+       happens behind it and never shows a seam. */
     .transition {
-      height: 60vh;
+      height: 100vh;
       background: linear-gradient(to bottom, #fafafa 0%, #0a0a0a 100%);
     }
 
     /* Project layout */
+    /* No align-items here on purpose: the grid items must stretch to the row
+       height, otherwise the sticky viewer has no range to travel through. */
     .project {
-      min-height: 100vh;
+      /* Taller than the viewport on purpose: the extra height is the scroll
+         distance the sticky model travels (and rotates) through. */
+      min-height: 180vh;
       position: relative;
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -141,10 +163,13 @@
       max-width: 1280px;
       margin: 0 auto;
       padding: 120px 48px;
-      align-items: center;
     }
 
-    .project-info { position: relative; z-index: 2; }
+    .project-info {
+      position: relative;
+      z-index: 2;
+      align-self: center;
+    }
 
     .project-tag {
       font-size: 12px;
@@ -201,11 +226,22 @@
       position: sticky;
       top: 0;
       height: 100vh;
+      min-width: 0;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .project-viewer canvas { display: block; }
+    /* Absolute so the canvas can never feed its own pixel size back into the
+       grid and prop the column open (which overflowed the page on retina). */
+    .project-viewer canvas {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .project-viewer.interactive { cursor: grab; touch-action: pan-y; }
+    .project-viewer.grabbing { cursor: grabbing; }
 
     .viewer-loading {
       position: absolute;
@@ -213,6 +249,59 @@
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--muted);
+    }
+
+    .viewer-hint {
+      position: absolute;
+      bottom: 15%;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      padding: 6px 14px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+    }
+    .viewer-hint.show { opacity: 1; }
+
+    /* Text-only projects need no scroll runway — only the model sections do.
+       Their panel must also drop the 100vh height, or it would force a
+       viewport-tall grid row and leave a large empty gap. */
+    .project--text { min-height: auto; }
+    .project--text .project-panel {
+      position: static;
+      height: auto;
+      align-self: center;
+    }
+
+    /* Placeholder panel for projects that don't have a 3D model yet */
+    .project-panel {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .panel-index {
+      font-size: 160px;
+      line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--muted);
+      opacity: 0.45;
+      letter-spacing: -4px;
+    }
+    .panel-note {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0.7;
     }
 
     /* Footer */
@@ -238,6 +327,12 @@
         height: 60vh;
         order: -1;
       }
+      .project-panel {
+        position: relative;
+        height: 30vh;
+        order: -1;
+      }
+      .panel-index { font-size: 90px; }
       .project-title { font-size: 32px; }
       .intro h1 { font-size: 36px; }
     }
@@ -277,20 +372,21 @@
       <div class="project-section">
         <h3>Problem</h3>
         <p>
-          Smart glasses live or die on weight, battery, and how they sit on a face.
-          We needed an internal mounting system that could hold optics and electronics
-          rigidly, survive drop tests, and still come apart cleanly on the assembly line
-          in Shenzhen.
+          Smart glasses live or die on weight, balance, and how they sit on a face.
+          Everything — camera, battery, boards, wiring — has to disappear into a frame
+          that still reads as a normal pair of glasses, survives being tossed in a bag,
+          and can be assembled at volume without a skilled technician.
         </p>
       </div>
 
       <div class="project-section">
         <h3>Approach</h3>
         <p>
-          The piece you're rotating is a side-mount bracket — one of several iterations.
-          It anchors the temple-arm electronics to the frame while isolating the optical
-          module from flex. Designed around injection-molding draft, with snap features
-          and locating bosses tuned for high-volume assembly.
+          The frame you're rotating is one of the concept iterations: temple arms sized
+          around the electronics stack, a hinge and side-mount interface that carries
+          load without transferring flex into the optics, and internal channels routing
+          wiring from the arms into the front. Designed around injection-molding draft
+          and snap features tuned for high-volume assembly.
         </p>
       </div>
 
@@ -306,11 +402,191 @@
 
     <div class="project-viewer" data-model="./models/glasses-side-mount.glb">
       <div class="viewer-loading">Loading model…</div>
+      <div class="viewer-hint">Drag to rotate</div>
+    </div>
+  </article>
+
+  <!-- Project: Cycloidal Gearbox -->
+  <article class="project project--text" id="cycloidal-gearbox">
+    <div class="project-info">
+      <div class="project-tag">Independent Research</div>
+      <h2 class="project-title">Differential Cycloidal Gearbox</h2>
+      <p class="project-subtitle">A new take on an old mechanism — 30% fewer parts.</p>
+
+      <div class="meta">
+        <div><span>Role</span><span>Inventor, designer</span></div>
+        <div><span>Status</span><span>Prototyped</span></div>
+        <div><span>Tools</span><span>Fusion 360, FDM/SLA</span></div>
+        <div><span>Result</span><span>&gt;30% part reduction</span></div>
+      </div>
+
+      <div class="project-section">
+        <h3>Problem</h3>
+        <p>
+          Cycloidal drives give you huge reduction ratios in a small package with
+          near-zero backlash — which is why robot joints love them. The catch is part
+          count: eccentric bearings, output pins, pin housings, and rollers stack up
+          fast, and every one of them is a tolerance stack and a cost line.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h3>Approach</h3>
+        <p>
+          I reworked the output stage as a differential, letting two cycloidal discs
+          take the reaction load against each other instead of routing it through a
+          separate pin-and-roller assembly. That collapses several components into
+          one and removes an entire tolerance chain.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h3>Outcome</h3>
+        <ul>
+          <li>Over 30% reduction in part count versus a conventional cycloidal drive</li>
+          <li>Fewer machined interfaces, so it prints and assembles far faster</li>
+          <li>Prototyped in-house on the ENEN Design print farm</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-panel">
+      <span class="panel-index">02</span>
+      <span class="panel-note">3D model coming soon</span>
+    </div>
+  </article>
+
+  <!-- Project: JACKS VEX U -->
+  <article class="project project--text" id="jacks-vexu">
+    <div class="project-info">
+      <div class="project-tag">2023–2025 — South Dakota State University</div>
+      <h2 class="project-title">JACKS VEX U</h2>
+      <p class="project-subtitle">Founded a university robotics team from zero.</p>
+
+      <div class="meta">
+        <div><span>Role</span><span>Founder, lead designer</span></div>
+        <div><span>Team</span><span>Built from scratch</span></div>
+        <div><span>Funding</span><span>$50K+ raised</span></div>
+        <div><span>Result</span><span>Excellence Award</span></div>
+      </div>
+
+      <div class="project-section">
+        <h3>Problem</h3>
+        <p>
+          SDSU had no VEX U presence. Competing at that level means custom-machined
+          drivetrains, real manufacturing capacity, and travel budget — none of which
+          existed on day one.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h3>Approach</h3>
+        <p>
+          Recruited and trained the founding roster, wrote the sponsorship case, and
+          set the design language for the robots: simple, serviceable subsystems that
+          a student could rebuild between matches. Raised over $50K to fund tooling
+          and travel.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h3>Outcome</h3>
+        <ul>
+          <li>Excellence Award at the VEX U World Championship — the program's top honor</li>
+          <li>2nd in the world in skills scoring</li>
+          <li>$50K+ raised; a team that outlives my time on it</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-panel">
+      <span class="panel-index">03</span>
+      <span class="panel-note">3D model coming soon</span>
+    </div>
+  </article>
+
+  <!-- Project: ENEN Design -->
+  <article class="project project--text" id="enen-design">
+    <div class="project-info">
+      <div class="project-tag">2024–Present — Founder</div>
+      <h2 class="project-title">ENEN Design</h2>
+      <p class="project-subtitle">A six-printer manufacturing business, run solo.</p>
+
+      <div class="meta">
+        <div><span>Role</span><span>Founder, operator</span></div>
+        <div><span>Revenue</span><span>$16K+ in 2025</span></div>
+        <div><span>Capacity</span><span>6 printers, in-house</span></div>
+        <div><span>Scope</span><span>Design → ship</span></div>
+      </div>
+
+      <div class="project-section">
+        <h3>What it is</h3>
+        <p>
+          A design-and-manufacture operation I run end to end: product design, print
+          farm scheduling, post-processing, fulfillment, and customer support. It's
+          where I learned that a design isn't finished when the CAD closes — it's
+          finished when it survives the hundredth unit.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h3>Outcome</h3>
+        <ul>
+          <li>$16K+ in revenue in 2025</li>
+          <li>Six-printer in-house production setup</li>
+          <li>Doubles as the rapid-prototyping shop for my other projects</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-panel">
+      <span class="panel-index">04</span>
+      <span class="panel-note">3D model coming soon</span>
+    </div>
+  </article>
+
+  <!-- Project: Combat Robots -->
+  <article class="project project--text" id="combat-robots">
+    <div class="project-info">
+      <div class="project-tag">Competition</div>
+      <h2 class="project-title">3lb Combat Robots</h2>
+      <p class="project-subtitle">Designing for the worst day a machine will ever have.</p>
+
+      <div class="meta">
+        <div><span>Role</span><span>Design, fabrication</span></div>
+        <div><span>Class</span><span>3lb beetleweight</span></div>
+        <div><span>Focus</span><span>Impact survivability</span></div>
+        <div><span>Tools</span><span>CAD, CNC, 3D print</span></div>
+      </div>
+
+      <div class="project-section">
+        <h3>Why it matters</h3>
+        <p>
+          Combat robotics is the fastest design feedback loop I've found. Every match
+          is a destructive test with a three-minute report. You learn very quickly
+          which fasteners back out, where stress concentrates, and how much of a
+          design's weight budget is doing nothing.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h3>What I took from it</h3>
+        <ul>
+          <li>Design for impact loads, not just static loads</li>
+          <li>Serviceability under time pressure is a real design constraint</li>
+          <li>Weight budgets force honesty about what a part is actually for</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-panel">
+      <span class="panel-index">05</span>
+      <span class="panel-note">3D model coming soon</span>
     </div>
   </article>
 
   <footer class="footer">
-    <p>More projects coming — cycloidal gearbox, combat robots, JACKS VEX U.</p>
+    <p>Currently exploring opportunities in mechanical engineering, robotics, and product design.</p>
     <p style="margin-top:24px;">
       <a href="./index.html">Home</a>
       <a href="./resume.pdf" target="_blank">Resume</a>
@@ -322,20 +598,23 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/environments/RoomEnvironment.js"></script>
   <script>
     // Toggle dark mode based on scroll position past the transition zone
     const transitionEl = document.querySelector('.transition');
+    // Flip the theme exactly when the gradient panel's top edge reaches the top
+    // of the viewport. At that instant the gradient covers the whole screen, so
+    // the background swap underneath it is invisible; scrolling on then reveals
+    // black page beneath the gradient's black end. No seam either direction.
     function updateTheme() {
       const rect = transitionEl.getBoundingClientRect();
-      const triggerPoint = window.innerHeight * 0.5;
-      if (rect.bottom < triggerPoint) {
-        document.body.classList.add('dark');
-      } else {
-        document.body.classList.remove('dark');
-      }
+      document.body.classList.toggle('dark', rect.top <= 0);
     }
     window.addEventListener('scroll', updateTheme, { passive: true });
     updateTheme();
+
+    const prefersReducedMotion =
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Each .project-viewer gets its own scene and loads its own glb
     const viewers = document.querySelectorAll('.project-viewer[data-model]');
@@ -343,11 +622,13 @@
     viewers.forEach((container) => {
       const modelUrl = container.dataset.model;
       const loadingEl = container.querySelector('.viewer-loading');
+      const hintEl = container.querySelector('.viewer-hint');
 
       const scene = new THREE.Scene();
 
       const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 2000);
       camera.position.set(180, 100, 220);
+      camera.lookAt(0, 0, 0);
 
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -357,28 +638,51 @@
       function resize() {
         const w = container.clientWidth;
         const h = container.clientHeight;
-        renderer.setSize(w, h, false);
+        renderer.setSize(w, h);  // updateStyle=true: canvas must size in CSS px, not device px
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
       }
       resize();
-      window.addEventListener('resize', resize);
+      // ResizeObserver rather than window.resize: the column can change width
+      // from layout alone (media queries, sticky reflow), not just viewport size.
+      if ('ResizeObserver' in window) {
+        new ResizeObserver(resize).observe(container);
+      } else {
+        window.addEventListener('resize', resize);
+      }
 
-      // Studio-style three-point lighting
-      scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-      const key = new THREE.DirectionalLight(0xffffff, 0.9);
+      // Image-based lighting: gives dark anodized parts real reflections so
+      // they read against a black background instead of disappearing into it.
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      pmrem.compileEquirectangularShader();
+      scene.environment = pmrem.fromScene(
+        new THREE.RoomEnvironment(), 0.04
+      ).texture;
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+      const key = new THREE.DirectionalLight(0xffffff, 1.1);
       key.position.set(150, 200, 150);
       scene.add(key);
-      const fill = new THREE.DirectionalLight(0xaab8ff, 0.35);
+      const fill = new THREE.DirectionalLight(0xaab8ff, 0.4);
       fill.position.set(-200, 80, -150);
       scene.add(fill);
-      const rim = new THREE.DirectionalLight(0xffffff, 0.5);
-      rim.position.set(0, -150, -200);
-      scene.add(rim);
+      // Two rim lights carve a bright edge around the silhouette
+      const rimA = new THREE.DirectionalLight(0xffffff, 1.4);
+      rimA.position.set(-120, -60, -220);
+      scene.add(rimA);
+      const rimB = new THREE.DirectionalLight(0xbfd4ff, 1.0);
+      rimB.position.set(180, -40, -180);
+      scene.add(rimB);
 
       let model = null;
-      let baseRotationY = 0;
-      let modelHeight = 0;
+      let spin = 0;
+
+      // Drag-to-rotate state
+      let dragging = false;
+      let lastX = 0, lastY = 0;
+      let dragYaw = 0, dragPitch = 0;
+      let velocity = 0;
+      let hasDragged = false;
 
       const loader = new THREE.GLTFLoader();
       const dracoLoader = new THREE.DRACOLoader();
@@ -389,11 +693,19 @@
         (gltf) => {
           model = gltf.scene;
 
-          // Use the materials baked into the glb — keeps per-part colors from Fusion
+          // Keep the per-part colors from Fusion, but lift very dark materials
+          // so they stay legible against the black page.
           model.traverse((child) => {
             if (child.isMesh && child.material) {
-              child.material.metalness = 0.6;
-              child.material.roughness = 0.4;
+              const m = child.material;
+              m.metalness = 0.55;
+              m.roughness = 0.35;
+              m.envMapIntensity = 1.6;
+              if (m.color) {
+                const hsl = { h: 0, s: 0, l: 0 };
+                m.color.getHSL(hsl);
+                if (hsl.l < 0.22) m.color.setHSL(hsl.h, hsl.s, 0.3);
+              }
               if (child.geometry) child.geometry.computeVertexNormals();
             }
           });
@@ -404,14 +716,17 @@
           const center = new THREE.Vector3();
           box.getSize(size);
           box.getCenter(center);
+          // Fit to well under the frame: the model sweeps through a full
+          // rotation, so its widest presentation must still clear the edges.
           const maxDim = Math.max(size.x, size.y, size.z);
-          const scale = 100 / maxDim;
+          const scale = 74 / maxDim;
           model.scale.setScalar(scale);
           model.position.sub(center.multiplyScalar(scale));
-          modelHeight = size.y * scale;
 
           scene.add(model);
           if (loadingEl) loadingEl.style.display = 'none';
+          if (hintEl) hintEl.classList.add('show');
+          container.classList.add('interactive');
         },
         undefined,
         (err) => {
@@ -419,6 +734,39 @@
           if (loadingEl) loadingEl.textContent = 'Could not load model.';
         }
       );
+
+      container.addEventListener('pointerdown', (e) => {
+        if (!model) return;
+        dragging = true;
+        lastX = e.clientX;
+        lastY = e.clientY;
+        container.classList.add('grabbing');
+        container.setPointerCapture(e.pointerId);
+      });
+      container.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const dx = e.clientX - lastX;
+        const dy = e.clientY - lastY;
+        lastX = e.clientX;
+        lastY = e.clientY;
+        dragYaw += dx * 0.008;
+        dragPitch = Math.max(-1.2, Math.min(1.2, dragPitch + dy * 0.006));
+        velocity = dx * 0.008;
+        if (!hasDragged && Math.abs(dx) + Math.abs(dy) > 4) {
+          hasDragged = true;
+          if (hintEl) hintEl.classList.remove('show');
+        }
+      });
+      function endDrag(e) {
+        if (!dragging) return;
+        dragging = false;
+        container.classList.remove('grabbing');
+        if (e && e.pointerId !== undefined && container.hasPointerCapture(e.pointerId)) {
+          container.releasePointerCapture(e.pointerId);
+        }
+      }
+      container.addEventListener('pointerup', endDrag);
+      container.addEventListener('pointercancel', endDrag);
 
       // Per-viewer scroll-driven rotation: tied to how far the parent project
       // has scrolled through the viewport
@@ -430,14 +778,28 @@
         return Math.max(0, Math.min(1, scrolled / total));
       }
 
+      // Only burn frames while this viewer is actually on screen
+      let onScreen = true;
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(
+          ([entry]) => { onScreen = entry.isIntersecting; },
+          { rootMargin: '100px' }
+        ).observe(container);
+      }
+
       function animate() {
         requestAnimationFrame(animate);
+        if (!onScreen) return;
         if (model) {
           const p = getScrollProgress();
-          // Scroll drives most of the rotation; gentle continuous spin layered on
-          baseRotationY += 0.0015;
-          model.rotation.y = baseRotationY + p * Math.PI * 2;
-          model.rotation.x = -0.25 + p * 0.4;
+          if (!dragging) {
+            // Inertia after a flick, decaying into the ambient spin
+            dragYaw += velocity;
+            velocity *= 0.94;
+            if (!prefersReducedMotion) spin += 0.0015;
+          }
+          model.rotation.y = spin + dragYaw + p * Math.PI * 2;
+          model.rotation.x = -0.25 + dragPitch + p * 0.4;
         }
         renderer.render(scene, camera);
       }
