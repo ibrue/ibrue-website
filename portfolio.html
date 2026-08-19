@@ -12,6 +12,13 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ibrue.com/portfolio.html">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@ianbru">
+  <meta property="og:image" content="https://ibrue.com/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Ian Brueggeman — a 3D render of smart-glasses hardware he designed.">
+  <meta property="og:site_name" content="Ian Brueggeman">
+  <meta name="twitter:image" content="https://ibrue.com/og.png">
 
   <link rel="canonical" href="https://ibrue.com/portfolio.html">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
@@ -256,6 +263,21 @@
       position: relative;
       z-index: 2;
       align-self: center;
+    }
+
+    /* Reveal on entry. Starts visible and is only hidden once JS confirms it
+       will observe the element, so the text is never stranded if JS fails. */
+    .reveal-ready .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-ready .reveal.in {
+      opacity: 1;
+      transform: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal-ready .reveal { opacity: 1; transform: none; transition: none; }
     }
 
     .project-tag {
@@ -840,6 +862,23 @@
 
     const prefersReducedMotion =
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Reveal-on-scroll. The hiding class is added from JS so that with JS
+    // disabled (or IntersectionObserver missing) everything stays visible.
+    if ('IntersectionObserver' in window) {
+      const targets = document.querySelectorAll('.project-info, .footer, .project-panel');
+      targets.forEach((el) => el.classList.add('reveal'));
+      document.body.classList.add('reveal-ready');
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: '0px 0px -12% 0px' });
+      targets.forEach((el) => revealObserver.observe(el));
+    }
 
     // Each .project-viewer gets its own scene and loads its own glb
     const viewers = document.querySelectorAll('.project-viewer[data-model]');

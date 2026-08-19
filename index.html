@@ -13,6 +13,12 @@
   <meta property="og:url" content="https://ibrue.com/">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:creator" content="@ianbru">
+  <meta property="og:image" content="https://ibrue.com/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Ian Brueggeman — a 3D render of smart-glasses hardware he designed.">
+  <meta property="og:site_name" content="Ian Brueggeman">
+  <meta name="twitter:image" content="https://ibrue.com/og.png">
 
   <link rel="canonical" href="https://ibrue.com/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
@@ -372,11 +378,11 @@
         const center = new THREE.Vector3();
         box.getSize(size);
         box.getCenter(center);
-        const fit = 82 / Math.max(size.x, size.y, size.z);
+        const fit = 76 / Math.max(size.x, size.y, size.z);
         model.scale.setScalar(fit);
         model.position.sub(center.multiplyScalar(fit));
         // Nudge right on desktop so the frame never crowds the column of text
-        if (window.innerWidth > 768) model.position.x += 14;
+        if (window.innerWidth > 768) model.position.x += 8;
 
         scene.add(model);
         container.classList.add('visible');
@@ -433,8 +439,10 @@
             velocity *= 0.94;
             if (!prefersReducedMotion) spin += 0.0018;
           }
-          model.rotation.y = 0.5 + spin + dragYaw + scrollProgress * Math.PI * 1.5;
-          model.rotation.x = -0.25 + dragPitch + scrollProgress * 0.3;
+          // Keep the scroll sweep gentle: a full tumble leaves the frame
+          // standing on end at the bottom of the page, which reads as broken.
+          model.rotation.y = 0.5 + spin + dragYaw + scrollProgress * Math.PI * 0.9;
+          model.rotation.x = -0.25 + dragPitch + scrollProgress * 0.1;
         }
         renderer.render(scene, camera);
       }
