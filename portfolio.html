@@ -42,18 +42,22 @@
     :root {
       --bg: #fafafa;
       --fg: #1a1a1a;
-      --muted: #555;
-      --rule: rgba(0,0,0,0.12);
+      --muted: #5a5a5a;
+      --rule: rgba(0,0,0,0.14);
+      --accent: #1f6feb;
+      --font-display: Georgia, 'Times New Roman', serif;
+      --font-ui: ui-sans-serif, -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: Georgia, 'Times New Roman', serif;
+      font-family: var(--font-display);
       background: var(--bg);
       color: var(--fg);
       line-height: 1.7;
       font-size: 16px;
+      -webkit-font-smoothing: antialiased;
       /* No transition on the theme flip: it happens while the gradient panel
          fills the viewport, so an instant swap is seamless and a fade is not.
          Also deliberately no overflow-x:hidden — it would make body a scroll
@@ -64,8 +68,9 @@
     body.dark {
       --bg: #0a0a0a;
       --fg: #f0f0f0;
-      --muted: #999;
-      --rule: rgba(255,255,255,0.12);
+      --muted: #8e8e8e;
+      --rule: rgba(255,255,255,0.14);
+      --accent: #6cb6ff;
     }
 
     a {
@@ -104,6 +109,64 @@
       transition: opacity 0.2s, color 0.25s ease;
     }
     .nav a:hover { opacity: 0.6; }
+    .nav .nav-label {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* Reading-progress hairline across the top of the page */
+    .progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0;
+      background: var(--accent);
+      z-index: 200;
+      transition: width 0.1s linear;
+    }
+
+    /* Fixed project index in the left margin. Numerals only, so it fits the
+       gutter without crowding the content column. */
+    .rail {
+      position: fixed;
+      left: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 90;
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      font-family: var(--font-ui);
+    }
+    .rail a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-decoration: none;
+      opacity: 0.55;
+      transition: opacity 0.25s, color 0.25s;
+    }
+    .rail a::before {
+      content: '';
+      width: 14px;
+      height: 1px;
+      background: currentColor;
+      transition: width 0.25s;
+    }
+    .rail a:hover { opacity: 1; }
+    .rail a.active {
+      opacity: 1;
+      color: var(--accent);
+    }
+    .rail a.active::before { width: 26px; }
+    @media (min-width: 1200px) {
+      .rail { display: flex; }
+    }
 
     /* Intro: white screen that frames the transition */
     .intro {
@@ -116,23 +179,47 @@
       padding: 24px;
       position: relative;
     }
+    .intro-kicker {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
     .intro h1 {
-      font-size: 48px;
+      font-size: clamp(44px, 8vw, 92px);
       font-weight: 400;
-      margin-bottom: 24px;
-      letter-spacing: -0.5px;
+      line-height: 1.02;
+      margin-bottom: 28px;
+      letter-spacing: -0.03em;
     }
     .intro p {
-      max-width: 480px;
+      max-width: 520px;
       color: var(--muted);
-      margin-bottom: 32px;
+      margin-bottom: 36px;
+      font-size: 17px;
+    }
+    .intro-meta {
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-top: 1px solid var(--rule);
+      padding-top: 22px;
     }
     .scroll-hint {
       position: absolute;
       bottom: 48px;
-      font-size: 13px;
+      font-family: var(--font-ui);
+      font-size: 11px;
       color: var(--muted);
-      letter-spacing: 2px;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       animation: bob 2s ease-in-out infinite;
     }
@@ -172,34 +259,45 @@
     }
 
     .project-tag {
-      font-size: 12px;
-      letter-spacing: 3px;
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 16px;
+      margin-bottom: 18px;
+    }
+    .project-tag .num {
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
     }
     .project-title {
-      font-size: 40px;
+      font-size: clamp(32px, 3.4vw, 46px);
       font-weight: 400;
-      margin-bottom: 8px;
-      letter-spacing: -0.5px;
+      line-height: 1.08;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
     }
     .project-subtitle {
-      font-size: 18px;
+      font-size: 19px;
       color: var(--muted);
-      margin-bottom: 32px;
+      margin-bottom: 36px;
       font-style: italic;
+      max-width: 32ch;
     }
-    .project-section { margin-bottom: 28px; }
+    .project-section { margin-bottom: 30px; }
     .project-section h3 {
-      font-size: 13px;
-      font-weight: 400;
-      letter-spacing: 2px;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       border-top: 1px solid var(--rule);
-      padding-top: 16px;
+      padding-top: 18px;
     }
     .project-section p, .project-section li { font-size: 15px; color: var(--fg); }
     .project-section ul { padding-left: 20px; margin-top: 4px; }
@@ -208,17 +306,26 @@
     .meta {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      gap: 18px 24px;
       font-size: 14px;
-      margin-bottom: 32px;
+      margin-bottom: 12px;
+      padding: 20px 0 4px;
+      border-top: 1px solid var(--rule);
+      /* No bottom rule: the next section's h3 already draws one, and the pair
+         read as an accidental double line. */
     }
     .meta div span:first-child {
       display: block;
-      font-size: 11px;
-      letter-spacing: 2px;
+      font-family: var(--font-ui);
+      font-size: 10px;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 4px;
+      margin-bottom: 5px;
+    }
+    .meta div span:last-child {
+      font-family: var(--font-ui);
+      font-size: 14px;
     }
 
     /* Sticky 3D viewer per project */
@@ -243,6 +350,26 @@
     .project-viewer.interactive { cursor: grab; touch-action: pan-y; }
     .project-viewer.grabbing { cursor: grabbing; }
 
+    /* Corner ticks: a light CAD-viewport frame around the model */
+    .viewer-frame {
+      position: absolute;
+      inset: 12% 8%;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    .project-viewer.interactive .viewer-frame { opacity: 1; }
+    .viewer-frame span {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 1px solid var(--rule);
+    }
+    .viewer-frame span:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+    .viewer-frame span:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+    .viewer-frame span:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+    .viewer-frame span:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+
     .viewer-loading {
       position: absolute;
       font-size: 12px;
@@ -251,16 +378,17 @@
       color: var(--muted);
     }
 
+    .viewer-loading, .viewer-hint { font-family: var(--font-ui); }
     .viewer-hint {
       position: absolute;
-      bottom: 15%;
-      font-size: 11px;
-      letter-spacing: 2px;
+      bottom: 8%;
+      font-size: 10px;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--muted);
       border: 1px solid var(--rule);
       border-radius: 999px;
-      padding: 6px 14px;
+      padding: 7px 16px;
       opacity: 0;
       transition: opacity 0.5s ease;
       pointer-events: none;
@@ -289,32 +417,72 @@
       gap: 16px;
     }
     .panel-index {
-      font-size: 160px;
+      font-family: var(--font-ui);
+      font-size: 150px;
+      font-weight: 200;
       line-height: 1;
       color: transparent;
       -webkit-text-stroke: 1px var(--muted);
-      opacity: 0.45;
-      letter-spacing: -4px;
+      opacity: 0.35;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
     }
     .panel-note {
-      font-size: 11px;
-      letter-spacing: 2px;
+      font-family: var(--font-ui);
+      font-size: 10px;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--muted);
-      opacity: 0.7;
+      opacity: 0.8;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      padding: 7px 16px;
     }
 
     /* Footer */
     .footer {
-      padding: 80px 48px 48px;
+      padding: 120px 48px 64px;
       text-align: center;
-      font-size: 14px;
-      color: var(--muted);
       border-top: 1px solid var(--rule);
-      max-width: 1280px;
+      max-width: 1180px;
       margin: 0 auto;
     }
-    .footer a { margin: 0 12px; }
+    .footer h2 {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+    .footer p {
+      color: var(--muted);
+      max-width: 460px;
+      margin: 0 auto 36px;
+    }
+    .footer-cta {
+      display: inline-block;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--bg);
+      background: var(--fg);
+      padding: 15px 32px;
+      border-radius: 999px;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .footer-cta:hover { transform: translateY(-2px); opacity: 1; }
+    .footer-links {
+      margin-top: 44px;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .footer-links a { margin: 0 12px; text-decoration: none; color: var(--muted); }
+    .footer-links a:hover { color: var(--fg); opacity: 1; }
 
     @media (max-width: 768px) {
       .project {
@@ -339,17 +507,34 @@
   </style>
 </head>
 <body>
+  <div class="progress" id="progress"></div>
+
   <nav class="nav">
-    <a href="./index.html">← Ian Brueggeman</a>
-    <a href="mailto:ianbrueggeman@gmail.com">Get in touch</a>
+    <a href="./index.html" class="nav-label">← Ian Brueggeman</a>
+    <a href="mailto:ianbrueggeman@gmail.com" class="nav-label">Get in touch</a>
   </nav>
 
+  <aside class="rail" id="rail">
+    <a href="#smart-glasses" data-target="smart-glasses">01</a>
+    <a href="#cycloidal-gearbox" data-target="cycloidal-gearbox">02</a>
+    <a href="#jacks-vexu" data-target="jacks-vexu">03</a>
+    <a href="#enen-design" data-target="enen-design">04</a>
+    <a href="#combat-robots" data-target="combat-robots">05</a>
+  </aside>
+
   <section class="intro">
-    <h1>Selected Work</h1>
+    <div class="intro-kicker">Portfolio — Mechanical Engineering</div>
+    <h1>Things I've<br>designed and built.</h1>
     <p>
-      Hardware, mechanisms, and robots I've designed, built, and shipped.
-      Scroll to explore each project in 3D.
+      Hardware, mechanisms, and robots — from a patented pair of smart glasses
+      that reached mass production to a gearbox with 30% fewer parts.
+      Drag any model to turn it over.
     </p>
+    <div class="intro-meta">
+      <span>5 Projects</span>
+      <span>2022 — 2025</span>
+      <span>Brookings, SD</span>
+    </div>
     <div class="scroll-hint">Scroll ↓</div>
   </section>
 
@@ -358,7 +543,7 @@
   <!-- Project: Smart Glasses -->
   <article class="project" id="smart-glasses">
     <div class="project-info">
-      <div class="project-tag">2024 — Build.ai</div>
+      <div class="project-tag"><span class="num">01</span><span>2024 — Build.ai</span></div>
       <h2 class="project-title">Smart Glasses Hardware</h2>
       <p class="project-subtitle">From concept to mass manufacturing in Shenzhen.</p>
 
@@ -402,6 +587,7 @@
 
     <div class="project-viewer" data-model="./models/glasses-side-mount.glb">
       <div class="viewer-loading">Loading model…</div>
+      <div class="viewer-frame"><span></span><span></span><span></span><span></span></div>
       <div class="viewer-hint">Drag to rotate</div>
     </div>
   </article>
@@ -409,7 +595,7 @@
   <!-- Project: Cycloidal Gearbox -->
   <article class="project project--text" id="cycloidal-gearbox">
     <div class="project-info">
-      <div class="project-tag">Independent Research</div>
+      <div class="project-tag"><span class="num">02</span><span>Independent Research</span></div>
       <h2 class="project-title">Differential Cycloidal Gearbox</h2>
       <p class="project-subtitle">A new take on an old mechanism — 30% fewer parts.</p>
 
@@ -452,14 +638,14 @@
 
     <div class="project-panel">
       <span class="panel-index">02</span>
-      <span class="panel-note">3D model coming soon</span>
+      <span class="panel-note">Model in progress</span>
     </div>
   </article>
 
   <!-- Project: JACKS VEX U -->
   <article class="project project--text" id="jacks-vexu">
     <div class="project-info">
-      <div class="project-tag">2023–2025 — South Dakota State University</div>
+      <div class="project-tag"><span class="num">03</span><span>2023–2025 — South Dakota State University</span></div>
       <h2 class="project-title">JACKS VEX U</h2>
       <p class="project-subtitle">Founded a university robotics team from zero.</p>
 
@@ -501,14 +687,14 @@
 
     <div class="project-panel">
       <span class="panel-index">03</span>
-      <span class="panel-note">3D model coming soon</span>
+      <span class="panel-note">Model in progress</span>
     </div>
   </article>
 
   <!-- Project: ENEN Design -->
   <article class="project project--text" id="enen-design">
     <div class="project-info">
-      <div class="project-tag">2024–Present — Founder</div>
+      <div class="project-tag"><span class="num">04</span><span>2024–Present — Founder</span></div>
       <h2 class="project-title">ENEN Design</h2>
       <p class="project-subtitle">A six-printer manufacturing business, run solo.</p>
 
@@ -541,14 +727,14 @@
 
     <div class="project-panel">
       <span class="panel-index">04</span>
-      <span class="panel-note">3D model coming soon</span>
+      <span class="panel-note">Model in progress</span>
     </div>
   </article>
 
   <!-- Project: Combat Robots -->
   <article class="project project--text" id="combat-robots">
     <div class="project-info">
-      <div class="project-tag">Competition</div>
+      <div class="project-tag"><span class="num">05</span><span>Competition</span></div>
       <h2 class="project-title">3lb Combat Robots</h2>
       <p class="project-subtitle">Designing for the worst day a machine will ever have.</p>
 
@@ -581,18 +767,23 @@
 
     <div class="project-panel">
       <span class="panel-index">05</span>
-      <span class="panel-note">3D model coming soon</span>
+      <span class="panel-note">Model in progress</span>
     </div>
   </article>
 
   <footer class="footer">
-    <p>Currently exploring opportunities in mechanical engineering, robotics, and product design.</p>
-    <p style="margin-top:24px;">
+    <h2>Let's build something.</h2>
+    <p>
+      Currently exploring opportunities in mechanical engineering, robotics,
+      and product design.
+    </p>
+    <a class="footer-cta" href="mailto:ianbrueggeman@gmail.com">Get in touch</a>
+    <div class="footer-links">
       <a href="./index.html">Home</a>
       <a href="./resume.pdf" target="_blank">Resume</a>
       <a href="https://linkedin.com/in/ianbrueggeman" target="_blank">LinkedIn</a>
-      <a href="mailto:ianbrueggeman@gmail.com">Email</a>
-    </p>
+      <a href="https://x.com/ianbru" target="_blank">X</a>
+    </div>
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -610,8 +801,42 @@
       const rect = transitionEl.getBoundingClientRect();
       document.body.classList.toggle('dark', rect.top <= 0);
     }
-    window.addEventListener('scroll', updateTheme, { passive: true });
+    // Reading progress + which project the rail should highlight. Both are
+    // cheap reads, so they share one rAF-throttled scroll handler.
+    const progressEl = document.getElementById('progress');
+    const railLinks = Array.from(document.querySelectorAll('.rail a'));
+    const sections = railLinks
+      .map((a) => document.getElementById(a.dataset.target))
+      .filter(Boolean);
+
+    function updateProgress() {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+      progressEl.style.width = pct + '%';
+
+      // Active = the last section whose top has passed the middle of the screen
+      const mid = window.innerHeight * 0.5;
+      let activeIdx = -1;
+      sections.forEach((sec, i) => {
+        if (sec.getBoundingClientRect().top <= mid) activeIdx = i;
+      });
+      railLinks.forEach((a, i) => a.classList.toggle('active', i === activeIdx));
+    }
+
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        updateTheme();
+        updateProgress();
+        ticking = false;
+      });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
     updateTheme();
+    updateProgress();
 
     const prefersReducedMotion =
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
