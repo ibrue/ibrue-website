@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio — Ian Brueggeman</title>
+  <meta name="description" content="Portfolio of Ian Brueggeman: smart-glasses hardware, cycloidal gearboxes, combat robots, and competition robotics. Mechanical engineering, product design, and robotics.">
+  <meta name="author" content="Ian Brueggeman">
+
+  <meta property="og:title" content="Portfolio — Ian Brueggeman">
+  <meta property="og:description" content="Mechanical engineering portfolio: smart-glasses hardware, novel cycloidal gearboxes, combat robots, and championship-winning competition robotics.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ibrue.com/portfolio.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@ianbru">
+  <meta property="og:image" content="https://ibrue.com/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Ian Brueggeman — a 3D render of smart-glasses hardware he designed.">
+  <meta property="og:site_name" content="Ian Brueggeman">
+  <meta name="twitter:image" content="https://ibrue.com/og.png">
+
+  <link rel="canonical" href="https://ibrue.com/portfolio.html">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Ian Brueggeman",
+    "url": "https://ibrue.com",
+    "email": "ianbrueggeman@gmail.com",
+    "jobTitle": "Mechanical Engineering Student",
+    "alumniOf": {
+      "@type": "CollegeOrUniversity",
+      "name": "South Dakota State University"
+    },
+    "knowsAbout": ["Mechanical Engineering", "Robotics", "Product Design", "CAD", "Manufacturing", "Smart Wearables"],
+    "sameAs": [
+      "https://linkedin.com/in/ianbrueggeman",
+      "https://x.com/ianbru"
+    ]
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #fafafa;
+      --fg: #1a1a1a;
+      --muted: #5a5a5a;
+      --rule: rgba(0,0,0,0.14);
+      --accent: #1f6feb;
+      --font-display: Georgia, 'Times New Roman', serif;
+      --font-ui: ui-sans-serif, -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-display);
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.7;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      /* No transition on the theme flip: it happens while the gradient panel
+         fills the viewport, so an instant swap is seamless and a fade is not.
+         Also deliberately no overflow-x:hidden — it would make body a scroll
+         container and silently break position:sticky on the model viewers. */
+    }
+
+    /* Dark mode kicks in once you scroll past the intro */
+    body.dark {
+      --bg: #0a0a0a;
+      --fg: #f0f0f0;
+      --muted: #8e8e8e;
+      --rule: rgba(255,255,255,0.14);
+      --accent: #6cb6ff;
+    }
+
+    a {
+      color: var(--fg);
+      text-decoration: underline;
+      transition: opacity 0.2s;
+    }
+    a:hover { opacity: 0.6; }
+
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      font-size: 14px;
+      pointer-events: none;
+      color: var(--fg);
+    }
+    /* Scrim so page content scrolling underneath never collides with the nav */
+    .nav::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, var(--bg) 65%, transparent);
+      z-index: -1;
+      height: 150%;
+      transition: background 0.25s ease;
+    }
+    .nav a {
+      color: var(--fg);
+      pointer-events: auto;
+      text-decoration: none;
+      transition: opacity 0.2s, color 0.25s ease;
+    }
+    .nav a:hover { opacity: 0.6; }
+    .nav .nav-label {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -60px;
+      z-index: 300;
+      background: var(--fg);
+      color: var(--bg);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      padding: 10px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 16px; opacity: 1; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    /* Reading-progress hairline across the top of the page */
+    .progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0;
+      background: var(--accent);
+      z-index: 200;
+      transition: width 0.1s linear;
+    }
+
+    /* Fixed project index in the left margin. Numerals only, so it fits the
+       gutter without crowding the content column. */
+    .rail {
+      position: fixed;
+      left: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 90;
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      font-family: var(--font-ui);
+    }
+    .rail a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-decoration: none;
+      opacity: 0.55;
+      transition: opacity 0.25s, color 0.25s;
+    }
+    .rail a::before {
+      content: '';
+      width: 14px;
+      height: 1px;
+      background: currentColor;
+      transition: width 0.25s;
+    }
+    .rail a:hover { opacity: 1; }
+    .rail a.active {
+      opacity: 1;
+      color: var(--accent);
+    }
+    .rail a.active::before { width: 26px; }
+    @media (min-width: 1200px) {
+      .rail { display: flex; }
+    }
+
+    /* Intro: white screen that frames the transition */
+    .intro {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 24px;
+      position: relative;
+    }
+    .intro-kicker {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+    .intro h1 {
+      font-size: clamp(44px, 8vw, 92px);
+      font-weight: 400;
+      line-height: 1.02;
+      margin-bottom: 28px;
+      letter-spacing: -0.03em;
+    }
+    .intro p {
+      max-width: 520px;
+      color: var(--muted);
+      margin-bottom: 36px;
+      font-size: 17px;
+    }
+    .intro-meta {
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-top: 1px solid var(--rule);
+      padding-top: 22px;
+    }
+    .scroll-hint {
+      position: absolute;
+      bottom: 48px;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      animation: bob 2s ease-in-out infinite;
+    }
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); opacity: 0.6; }
+      50% { transform: translateY(6px); opacity: 1; }
+    }
+
+    /* The transition zone. Full viewport height so that at the moment the
+       theme flips, this panel covers the screen edge to edge — the swap
+       happens behind it and never shows a seam. */
+    .transition {
+      height: 100vh;
+      background: linear-gradient(to bottom, #fafafa 0%, #0a0a0a 100%);
+    }
+
+    /* Project layout */
+    /* No align-items here on purpose: the grid items must stretch to the row
+       height, otherwise the sticky viewer has no range to travel through. */
+    .project {
+      /* Taller than the viewport on purpose: the extra height is the scroll
+         distance the sticky model travels (and rotates) through. */
+      min-height: 180vh;
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 120px 48px;
+    }
+
+    .project-info {
+      position: relative;
+      z-index: 2;
+      align-self: center;
+    }
+
+    /* Reveal on entry. Starts visible and is only hidden once JS confirms it
+       will observe the element, so the text is never stranded if JS fails. */
+    .reveal-ready .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-ready .reveal.in {
+      opacity: 1;
+      transform: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal-ready .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    .project-tag {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    .project-tag .num {
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+    .project-title {
+      font-size: clamp(32px, 3.4vw, 46px);
+      font-weight: 400;
+      line-height: 1.08;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    .project-subtitle {
+      font-size: 19px;
+      color: var(--muted);
+      margin-bottom: 36px;
+      font-style: italic;
+      max-width: 32ch;
+    }
+    .project-section { margin-bottom: 30px; }
+    .project-section h3 {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+      border-top: 1px solid var(--rule);
+      padding-top: 18px;
+    }
+    .project-section p, .project-section li { font-size: 15px; color: var(--fg); }
+    .project-section ul { padding-left: 20px; margin-top: 4px; }
+    .project-section li { margin-bottom: 6px; }
+
+    .meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 24px;
+      font-size: 14px;
+      margin-bottom: 12px;
+      padding: 20px 0 4px;
+      border-top: 1px solid var(--rule);
+      /* No bottom rule: the next section's h3 already draws one, and the pair
+         read as an accidental double line. */
+    }
+    .meta div span:first-child {
+      display: block;
+      font-family: var(--font-ui);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+    .meta div span:last-child {
+      font-family: var(--font-ui);
+      font-size: 14px;
+    }
+
+    /* Sticky 3D viewer per project */
+    .project-viewer {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Absolute so the canvas can never feed its own pixel size back into the
+       grid and prop the column open (which overflowed the page on retina). */
+    .project-viewer canvas {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .project-viewer.interactive { cursor: grab; touch-action: pan-y; }
+    .project-viewer.grabbing { cursor: grabbing; }
+
+    /* Corner ticks: a light CAD-viewport frame around the model */
+    .viewer-frame {
+      position: absolute;
+      inset: 12% 8%;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    .project-viewer.interactive .viewer-frame { opacity: 1; }
+    .viewer-frame span {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 1px solid var(--rule);
+    }
+    .viewer-frame span:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+    .viewer-frame span:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+    .viewer-frame span:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+    .viewer-frame span:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+
+    .viewer-loading {
+      position: absolute;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .viewer-loading, .viewer-hint { font-family: var(--font-ui); }
+    .viewer-hint {
+      position: absolute;
+      bottom: 8%;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      padding: 7px 16px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+    }
+    .viewer-hint.show { opacity: 1; }
+
+    /* Text-only projects need no scroll runway — only the model sections do.
+       Their panel must also drop the 100vh height, or it would force a
+       viewport-tall grid row and leave a large empty gap. */
+    .project--text { min-height: auto; }
+    .project--text .project-panel {
+      position: static;
+      height: auto;
+      align-self: center;
+    }
+
+    /* Placeholder panel for projects that don't have a 3D model yet */
+    .project-panel {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .panel-index {
+      font-family: var(--font-ui);
+      font-size: 150px;
+      font-weight: 200;
+      line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--muted);
+      opacity: 0.35;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+    }
+    .panel-note {
+      font-family: var(--font-ui);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0.8;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      padding: 7px 16px;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 120px 48px 64px;
+      text-align: center;
+      border-top: 1px solid var(--rule);
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+    .footer h2 {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+    .footer p {
+      color: var(--muted);
+      max-width: 460px;
+      margin: 0 auto 36px;
+    }
+    .footer-cta {
+      display: inline-block;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--bg);
+      background: var(--fg);
+      padding: 15px 32px;
+      border-radius: 999px;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .footer-cta:hover { transform: translateY(-2px); opacity: 1; }
+    .footer-links {
+      margin-top: 44px;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .footer-links a { margin: 0 12px; text-decoration: none; color: var(--muted); }
+    .footer-links a:hover { color: var(--fg); opacity: 1; }
+
+    @media (max-width: 768px) {
+      .project {
+        grid-template-columns: 1fr;
+        padding: 80px 24px;
+        gap: 24px;
+      }
+      .project-viewer {
+        position: relative;
+        height: 60vh;
+        order: -1;
+      }
+      .project-panel {
+        position: relative;
+        height: 30vh;
+        order: -1;
+      }
+      .panel-index { font-size: 90px; }
+      .project-title { font-size: 32px; }
+      .intro h1 { font-size: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="progress" id="progress"></div>
+
+  <nav class="nav">
+    <a href="./index.html" class="nav-label">← Ian Brueggeman</a>
+    <a href="mailto:ianbrueggeman@gmail.com" class="nav-label">Get in touch</a>
+  </nav>
+
+  <aside class="rail" id="rail">
+    <a href="#smart-glasses" data-target="smart-glasses">01</a>
+    <a href="#cycloidal-gearbox" data-target="cycloidal-gearbox">02</a>
+    <a href="#jacks-vexu" data-target="jacks-vexu">03</a>
+    <a href="#enen-design" data-target="enen-design">04</a>
+    <a href="#combat-robots" data-target="combat-robots">05</a>
+  </aside>
+
+  <main id="main">
+  <section class="intro">
+    <div class="intro-kicker">Portfolio — Mechanical Engineering</div>
+    <h1>Things I've<br>designed and built.</h1>
+    <p>
+      Hardware, mechanisms, and robots — from a patented pair of smart glasses
+      that reached mass production to a gearbox with 30% fewer parts.
+      Drag any model to turn it over.
+    </p>
+    <div class="intro-meta">
+      <span>5 Projects</span>
+      <span>2022 — 2025</span>
+      <span>Brookings, SD</span>
+    </div>
+    <div class="scroll-hint">Scroll ↓</div>
+  </section>
+
+  <div class="transition"></div>
+
+  <!-- Project: Smart Glasses -->
+  <article class="project" id="smart-glasses">
+    <div class="project-info">
+      <div class="project-tag"><span class="num">01</span><span>2024 — Build.ai</span></div>
+      <h2 class="project-title">Smart Glasses Hardware</h2>
+      <p class="project-subtitle">From concept to mass manufacturing in Shenzhen.</p>
+
+      <div class="meta">
+        <div><span>Role</span><span>Hardware design</span></div>
+        <div><span>Status</span><span>Patented · Manufactured</span></div>
+        <div><span>Tools</span><span>Fusion 360, DFM</span></div>
+        <div><span>Output</span><span>Production tooling</span></div>
+      </div>
+
+      <div class="project-section">
+        <h3>Problem</h3>
+        <p>
+          Smart glasses live or die on weight, balance, and how they sit on a face.
+          Everything — camera, battery, boards, wiring — has to disappear into a frame
+          that still reads as a normal pair of glasses, survives being tossed in a bag,
+          and can be assembled at volume without a skilled technician.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h3>Approach</h3>
+        <p>
+          The frame you're rotating is one of the concept iterations: temple arms sized
+          around the electronics stack, a hinge and side-mount interface that carries
+          load without transferring flex into the optics, and internal channels routing
+          wiring from the arms into the front. Designed around injection-molding draft
+          and snap features tuned for high-volume assembly.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h3>Outcome</h3>
+        <ul>
+          <li>Concept → DFM → tooling → mass production</li>
+          <li>Co-inventor on patent for power-optimized image capture in smart wearables</li>
+          <li>Worked directly with manufacturing partners in Shenzhen</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-viewer" data-model="./models/glasses-side-mount.glb"
+         role="img" tabindex="0"
+         aria-label="Interactive 3D model of the smart-glasses frame. Drag, or use the left and right arrow keys, to rotate it.">
+      <div class="viewer-loading">Loading model…</div>
+      <div class="viewer-frame"><span></span><span></span><span></span><span></span></div>
+      <div class="viewer-hint">Drag to rotate</div>
+    </div>
+  </article>
+
+  <!-- Project: Cycloidal Gearbox -->
+  <article class="project project--text" id="cycloidal-gearbox">
+    <div class="project-info">
+      <div class="project-tag"><span class="num">02</span><span>Independent Research</span></div>
+      <h2 class="project-title">Differential Cycloidal Gearbox</h2>
+      <p class="project-subtitle">A new take on an old mechanism — 30% fewer parts.</p>
+
+      <div class="meta">
+        <div><span>Role</span><span>Inventor, designer</span></div>
+        <div><span>Status</span><span>Prototyped</span></div>
+        <div><span>Tools</span><span>Fusion 360, FDM/SLA</span></div>
+        <div><span>Result</span><span>&gt;30% part reduction</span></div>
+      </div>
+
+      <div class="project-section">
+        <h3>Problem</h3>
+        <p>
+          Cycloidal drives give you huge reduction ratios in a small package with
+          near-zero backlash — which is why robot joints love them. The catch is part
+          count: eccentric bearings, output pins, pin housings, and rollers stack up
+          fast, and every one of them is a tolerance stack and a cost line.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h3>Approach</h3>
+        <p>
+          I reworked the output stage as a differential, letting two cycloidal discs
+          take the reaction load against each other instead of routing it through a
+          separate pin-and-roller assembly. That collapses several components into
+          one and removes an entire tolerance chain.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h3>Outcome</h3>
+        <ul>
+          <li>Over 30% reduction in part count versus a conventional cycloidal drive</li>
+          <li>Fewer machined interfaces, so it prints and assembles far faster</li>
+          <li>Prototyped in-house on the ENEN Design print farm</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-panel">
+      <span class="panel-index">02</span>
+      <span class="panel-note">Model in progress</span>
+    </div>
+  </article>
+
+  <!-- Project: JACKS VEX U -->
+  <article class="project project--text" id="jacks-vexu">
+    <div class="project-info">
+      <div class="project-tag"><span class="num">03</span><span>2023–2025 — South Dakota State University</span></div>
+      <h2 class="project-title">JACKS VEX U</h2>
+      <p class="project-subtitle">Founded a university robotics team from zero.</p>
+
+      <div class="meta">
+        <div><span>Role</span><span>Founder, lead designer</span></div>
+        <div><span>Team</span><span>Built from scratch</span></div>
+        <div><span>Funding</span><span>$50K+ raised</span></div>
+        <div><span>Result</span><span>Excellence Award</span></div>
+      </div>
+
+      <div class="project-section">
+        <h3>Problem</h3>
+        <p>
+          SDSU had no VEX U presence. Competing at that level means custom-machined
+          drivetrains, real manufacturing capacity, and travel budget — none of which
+          existed on day one.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h3>Approach</h3>
+        <p>
+          Recruited and trained the founding roster, wrote the sponsorship case, and
+          set the design language for the robots: simple, serviceable subsystems that
+          a student could rebuild between matches. Raised over $50K to fund tooling
+          and travel.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h3>Outcome</h3>
+        <ul>
+          <li>Excellence Award at the VEX U World Championship — the program's top honor</li>
+          <li>2nd in the world in skills scoring</li>
+          <li>$50K+ raised; a team that outlives my time on it</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-panel">
+      <span class="panel-index">03</span>
+      <span class="panel-note">Model in progress</span>
+    </div>
+  </article>
+
+  <!-- Project: ENEN Design -->
+  <article class="project project--text" id="enen-design">
+    <div class="project-info">
+      <div class="project-tag"><span class="num">04</span><span>2024–Present — Founder</span></div>
+      <h2 class="project-title">ENEN Design</h2>
+      <p class="project-subtitle">A six-printer manufacturing business, run solo.</p>
+
+      <div class="meta">
+        <div><span>Role</span><span>Founder, operator</span></div>
+        <div><span>Revenue</span><span>$16K+ in 2025</span></div>
+        <div><span>Capacity</span><span>6 printers, in-house</span></div>
+        <div><span>Scope</span><span>Design → ship</span></div>
+      </div>
+
+      <div class="project-section">
+        <h3>What it is</h3>
+        <p>
+          A design-and-manufacture operation I run end to end: product design, print
+          farm scheduling, post-processing, fulfillment, and customer support. It's
+          where I learned that a design isn't finished when the CAD closes — it's
+          finished when it survives the hundredth unit.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h3>Outcome</h3>
+        <ul>
+          <li>$16K+ in revenue in 2025</li>
+          <li>Six-printer in-house production setup</li>
+          <li>Doubles as the rapid-prototyping shop for my other projects</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-panel">
+      <span class="panel-index">04</span>
+      <span class="panel-note">Model in progress</span>
+    </div>
+  </article>
+
+  <!-- Project: Combat Robots -->
+  <article class="project project--text" id="combat-robots">
+    <div class="project-info">
+      <div class="project-tag"><span class="num">05</span><span>Competition</span></div>
+      <h2 class="project-title">3lb Combat Robots</h2>
+      <p class="project-subtitle">Designing for the worst day a machine will ever have.</p>
+
+      <div class="meta">
+        <div><span>Role</span><span>Design, fabrication</span></div>
+        <div><span>Class</span><span>3lb beetleweight</span></div>
+        <div><span>Focus</span><span>Impact survivability</span></div>
+        <div><span>Tools</span><span>CAD, CNC, 3D print</span></div>
+      </div>
+
+      <div class="project-section">
+        <h3>Why it matters</h3>
+        <p>
+          Combat robotics is the fastest design feedback loop I've found. Every match
+          is a destructive test with a three-minute report. You learn very quickly
+          which fasteners back out, where stress concentrates, and how much of a
+          design's weight budget is doing nothing.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h3>What I took from it</h3>
+        <ul>
+          <li>Design for impact loads, not just static loads</li>
+          <li>Serviceability under time pressure is a real design constraint</li>
+          <li>Weight budgets force honesty about what a part is actually for</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-panel">
+      <span class="panel-index">05</span>
+      <span class="panel-note">Model in progress</span>
+    </div>
+  </article>
+
+  </main>
+
+  <footer class="footer">
+    <h2>Let's build something.</h2>
+    <p>
+      Currently exploring opportunities in mechanical engineering, robotics,
+      and product design.
+    </p>
+    <a class="footer-cta" href="mailto:ianbrueggeman@gmail.com">Get in touch</a>
+    <div class="footer-links">
+      <a href="./index.html">Home</a>
+      <a href="./resume.pdf" target="_blank">Resume</a>
+      <a href="https://linkedin.com/in/ianbrueggeman" target="_blank">LinkedIn</a>
+      <a href="https://x.com/ianbru" target="_blank">X</a>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/environments/RoomEnvironment.js"></script>
+  <script>
+    // Toggle dark mode based on scroll position past the transition zone
+    const transitionEl = document.querySelector('.transition');
+    // Flip the theme exactly when the gradient panel's top edge reaches the top
+    // of the viewport. At that instant the gradient covers the whole screen, so
+    // the background swap underneath it is invisible; scrolling on then reveals
+    // black page beneath the gradient's black end. No seam either direction.
+    function updateTheme() {
+      const rect = transitionEl.getBoundingClientRect();
+      document.body.classList.toggle('dark', rect.top <= 0);
+    }
+    // Reading progress + which project the rail should highlight. Both are
+    // cheap reads, so they share one rAF-throttled scroll handler.
+    const progressEl = document.getElementById('progress');
+    const railLinks = Array.from(document.querySelectorAll('.rail a'));
+    const sections = railLinks
+      .map((a) => document.getElementById(a.dataset.target))
+      .filter(Boolean);
+
+    function updateProgress() {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+      progressEl.style.width = pct + '%';
+
+      // Active = the last section whose top has passed the middle of the screen
+      const mid = window.innerHeight * 0.5;
+      let activeIdx = -1;
+      sections.forEach((sec, i) => {
+        if (sec.getBoundingClientRect().top <= mid) activeIdx = i;
+      });
+      railLinks.forEach((a, i) => a.classList.toggle('active', i === activeIdx));
+    }
+
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        updateTheme();
+        updateProgress();
+        ticking = false;
+      });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    updateTheme();
+    updateProgress();
+
+    const prefersReducedMotion =
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Reveal-on-scroll. The hiding class is added from JS so that with JS
+    // disabled (or IntersectionObserver missing) everything stays visible.
+    if ('IntersectionObserver' in window) {
+      const targets = document.querySelectorAll('.project-info, .footer, .project-panel');
+      targets.forEach((el) => el.classList.add('reveal'));
+      document.body.classList.add('reveal-ready');
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: '0px 0px -12% 0px' });
+      targets.forEach((el) => revealObserver.observe(el));
+    }
+
+    // Each .project-viewer gets its own scene and loads its own glb
+    const viewers = document.querySelectorAll('.project-viewer[data-model]');
+
+    viewers.forEach((container) => {
+      const modelUrl = container.dataset.model;
+      const loadingEl = container.querySelector('.viewer-loading');
+      const hintEl = container.querySelector('.viewer-hint');
+
+      const scene = new THREE.Scene();
+
+      const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 2000);
+      camera.position.set(180, 100, 220);
+      camera.lookAt(0, 0, 0);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.outputEncoding = THREE.sRGBEncoding;
+      container.appendChild(renderer.domElement);
+
+      function resize() {
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        renderer.setSize(w, h);  // updateStyle=true: canvas must size in CSS px, not device px
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+      resize();
+      // ResizeObserver rather than window.resize: the column can change width
+      // from layout alone (media queries, sticky reflow), not just viewport size.
+      if ('ResizeObserver' in window) {
+        new ResizeObserver(resize).observe(container);
+      } else {
+        window.addEventListener('resize', resize);
+      }
+
+      // Image-based lighting: gives dark anodized parts real reflections so
+      // they read against a black background instead of disappearing into it.
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      pmrem.compileEquirectangularShader();
+      scene.environment = pmrem.fromScene(
+        new THREE.RoomEnvironment(), 0.04
+      ).texture;
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+      const key = new THREE.DirectionalLight(0xffffff, 1.1);
+      key.position.set(150, 200, 150);
+      scene.add(key);
+      const fill = new THREE.DirectionalLight(0xaab8ff, 0.4);
+      fill.position.set(-200, 80, -150);
+      scene.add(fill);
+      // Two rim lights carve a bright edge around the silhouette
+      const rimA = new THREE.DirectionalLight(0xffffff, 1.4);
+      rimA.position.set(-120, -60, -220);
+      scene.add(rimA);
+      const rimB = new THREE.DirectionalLight(0xbfd4ff, 1.0);
+      rimB.position.set(180, -40, -180);
+      scene.add(rimB);
+
+      let model = null;
+      let spin = 0;
+
+      // Drag-to-rotate state
+      let dragging = false;
+      let lastX = 0, lastY = 0;
+      let dragYaw = 0, dragPitch = 0;
+      let velocity = 0;
+      let hasDragged = false;
+
+      const loader = new THREE.GLTFLoader();
+      const dracoLoader = new THREE.DRACOLoader();
+      dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/');
+      loader.setDRACOLoader(dracoLoader);
+      loader.load(
+        modelUrl,
+        (gltf) => {
+          model = gltf.scene;
+
+          // Keep the per-part colors from Fusion, but lift very dark materials
+          // so they stay legible against the black page.
+          model.traverse((child) => {
+            if (child.isMesh && child.material) {
+              const m = child.material;
+              m.metalness = 0.55;
+              m.roughness = 0.35;
+              m.envMapIntensity = 1.6;
+              if (m.color) {
+                const hsl = { h: 0, s: 0, l: 0 };
+                m.color.getHSL(hsl);
+                if (hsl.l < 0.22) m.color.setHSL(hsl.h, hsl.s, 0.3);
+              }
+              if (child.geometry) child.geometry.computeVertexNormals();
+            }
+          });
+
+          // Center + scale to fit viewport
+          const box = new THREE.Box3().setFromObject(model);
+          const size = new THREE.Vector3();
+          const center = new THREE.Vector3();
+          box.getSize(size);
+          box.getCenter(center);
+          // Fit to well under the frame: the model sweeps through a full
+          // rotation, so its widest presentation must still clear the edges.
+          const maxDim = Math.max(size.x, size.y, size.z);
+          const scale = 74 / maxDim;
+          model.scale.setScalar(scale);
+          model.position.sub(center.multiplyScalar(scale));
+
+          scene.add(model);
+          if (loadingEl) loadingEl.style.display = 'none';
+          if (hintEl) hintEl.classList.add('show');
+          container.classList.add('interactive');
+        },
+        undefined,
+        (err) => {
+          console.error('Failed to load', modelUrl, err);
+          if (loadingEl) loadingEl.textContent = 'Could not load model.';
+        }
+      );
+
+      container.addEventListener('pointerdown', (e) => {
+        if (!model) return;
+        dragging = true;
+        lastX = e.clientX;
+        lastY = e.clientY;
+        container.classList.add('grabbing');
+        container.setPointerCapture(e.pointerId);
+      });
+      container.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const dx = e.clientX - lastX;
+        const dy = e.clientY - lastY;
+        lastX = e.clientX;
+        lastY = e.clientY;
+        dragYaw += dx * 0.008;
+        dragPitch = Math.max(-1.2, Math.min(1.2, dragPitch + dy * 0.006));
+        velocity = dx * 0.008;
+        if (!hasDragged && Math.abs(dx) + Math.abs(dy) > 4) {
+          hasDragged = true;
+          if (hintEl) hintEl.classList.remove('show');
+        }
+      });
+      function endDrag(e) {
+        if (!dragging) return;
+        dragging = false;
+        container.classList.remove('grabbing');
+        if (e && e.pointerId !== undefined && container.hasPointerCapture(e.pointerId)) {
+          container.releasePointerCapture(e.pointerId);
+        }
+      }
+      container.addEventListener('pointerup', endDrag);
+      container.addEventListener('pointercancel', endDrag);
+
+      // Keyboard equivalent for the drag interaction
+      container.addEventListener('keydown', (e) => {
+        if (!model) return;
+        if (e.key === 'ArrowLeft') dragYaw -= 0.18;
+        else if (e.key === 'ArrowRight') dragYaw += 0.18;
+        else if (e.key === 'ArrowUp') dragPitch = Math.max(-1.2, dragPitch - 0.12);
+        else if (e.key === 'ArrowDown') dragPitch = Math.min(1.2, dragPitch + 0.12);
+        else return;
+        e.preventDefault();
+        if (hintEl) hintEl.classList.remove('show');
+      });
+
+      // Per-viewer scroll-driven rotation: tied to how far the parent project
+      // has scrolled through the viewport
+      const projectEl = container.closest('.project');
+      function getScrollProgress() {
+        const rect = projectEl.getBoundingClientRect();
+        const total = rect.height + window.innerHeight;
+        const scrolled = window.innerHeight - rect.top;
+        return Math.max(0, Math.min(1, scrolled / total));
+      }
+
+      // Only burn frames while this viewer is actually on screen
+      let onScreen = true;
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(
+          ([entry]) => { onScreen = entry.isIntersecting; },
+          { rootMargin: '100px' }
+        ).observe(container);
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        if (!onScreen) return;
+        if (model) {
+          const p = getScrollProgress();
+          if (!dragging) {
+            // Inertia after a flick, decaying into the ambient spin
+            dragYaw += velocity;
+            velocity *= 0.94;
+            if (!prefersReducedMotion) spin += 0.0015;
+          }
+          model.rotation.y = spin + dragYaw + p * Math.PI * 2;
+          model.rotation.x = -0.25 + dragPitch + p * 0.4;
+        }
+        renderer.render(scene, camera);
+      }
+      animate();
+    });
+  </script>
+</body>
+</html>

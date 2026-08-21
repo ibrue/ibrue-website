@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OG card source</title>
+  <!--
+    Source for the social preview image. Render at 1200x630 and screenshot to
+    /og.png:  node tools/render-og.js
+    Kept in the repo so the card can be regenerated when the model or copy
+    changes, rather than being a mystery binary.
+  -->
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 1200px; height: 630px; overflow: hidden; }
+    body {
+      background: #0a0a0a;
+      color: #f0f0f0;
+      font-family: Georgia, 'Times New Roman', serif;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+    }
+    .copy { padding: 0 0 0 76px; }
+    .kicker {
+      font-family: ui-sans-serif, -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 17px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #8e8e8e;
+      margin-bottom: 26px;
+    }
+    h1 {
+      font-size: 76px;
+      font-weight: 400;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      margin-bottom: 22px;
+    }
+    p {
+      font-size: 24px;
+      line-height: 1.45;
+      color: #b4b4b4;
+      max-width: 20ch;
+    }
+    .meta {
+      margin-top: 34px;
+      padding-top: 22px;
+      border-top: 1px solid rgba(255,255,255,0.16);
+      font-family: ui-sans-serif, -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 15px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8e8e8e;
+    }
+    #stage { width: 100%; height: 630px; }
+    #stage canvas { display: block; }
+  </style>
+</head>
+<body>
+  <div class="copy">
+    <div class="kicker">Mechanical Engineering</div>
+    <h1>Ian<br>Brueggeman</h1>
+    <p>I design, build, and compete.</p>
+    <div class="meta">ibrue.com</div>
+  </div>
+  <div id="stage"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/environments/RoomEnvironment.js"></script>
+  <script>
+    const stage = document.getElementById('stage');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(34, stage.clientWidth / 630, 0.1, 2000);
+    camera.position.set(180, 105, 215);
+    camera.lookAt(0, 0, 0);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(2);
+    renderer.setSize(stage.clientWidth, 630);
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    stage.appendChild(renderer.domElement);
+
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    pmrem.compileEquirectangularShader();
+    scene.environment = pmrem.fromScene(new THREE.RoomEnvironment(), 0.04).texture;
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+    const key = new THREE.DirectionalLight(0xffffff, 1.1);
+    key.position.set(150, 200, 150);
+    scene.add(key);
+    const rimA = new THREE.DirectionalLight(0xffffff, 1.4);
+    rimA.position.set(-120, -60, -220);
+    scene.add(rimA);
+    const rimB = new THREE.DirectionalLight(0xbfd4ff, 1.0);
+    rimB.position.set(180, -40, -180);
+    scene.add(rimB);
+
+    const loader = new THREE.GLTFLoader();
+    const draco = new THREE.DRACOLoader();
+    draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/');
+    loader.setDRACOLoader(draco);
+
+    loader.load('../models/glasses-side-mount.glb', (gltf) => {
+      const model = gltf.scene;
+      model.traverse((child) => {
+        if (child.isMesh && child.material) {
+          const m = child.material;
+          m.metalness = 0.55;
+          m.roughness = 0.35;
+          m.envMapIntensity = 1.6;
+          if (m.color) {
+            const hsl = { h: 0, s: 0, l: 0 };
+            m.color.getHSL(hsl);
+            if (hsl.l < 0.22) m.color.setHSL(hsl.h, hsl.s, 0.3);
+          }
+        }
+      });
+      const box = new THREE.Box3().setFromObject(model);
+      const size = new THREE.Vector3();
+      const center = new THREE.Vector3();
+      box.getSize(size);
+      box.getCenter(center);
+      const scale = 82 / Math.max(size.x, size.y, size.z);
+      model.scale.setScalar(scale);
+      model.position.sub(center.multiplyScalar(scale));
+      model.rotation.set(-0.22, 0.72, 0);
+      scene.add(model);
+      renderer.render(scene, camera);
+      document.body.dataset.ready = '1';
+    });
+  </script>
+</body>
+</html>
