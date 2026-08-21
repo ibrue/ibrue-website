@@ -155,6 +155,11 @@
     a:hover {
       opacity: 0.6;
     }
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
     .links {
       display: flex;
       gap: 16px;
@@ -223,11 +228,13 @@
   </style>
 </head>
 <body>
-  <div class="model-viewer" id="modelViewer">
+  <!-- Decorative on this page: the portfolio carries the same model as
+       labelled, keyboard-operable content. -->
+  <div class="model-viewer" id="modelViewer" aria-hidden="true">
     <div class="model-loading">Loading 3D model...</div>
   </div>
-  
-  <div class="container">
+
+  <main class="container">
     
     <h1>Ian Brueggeman</h1>
     <div class="tagline">Mechanical Engineering — Robotics — Product Design</div>
@@ -279,7 +286,7 @@
       <span>|</span>
       <a href="https://x.com/ianbru" target="_blank">X</a>
     </p>
-  </div>
+  </main>
   <script>
     // Three.js is loaded lazily so it never blocks first paint. Text renders
     // immediately; the 3D viewer hydrates once the page is idle.

@@ -123,6 +123,28 @@
       text-transform: uppercase;
     }
 
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -60px;
+      z-index: 300;
+      background: var(--fg);
+      color: var(--bg);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      padding: 10px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 16px; opacity: 1; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
     /* Reading-progress hairline across the top of the page */
     .progress {
       position: fixed;
@@ -529,6 +551,7 @@
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
   <div class="progress" id="progress"></div>
 
   <nav class="nav">
@@ -544,6 +567,7 @@
     <a href="#combat-robots" data-target="combat-robots">05</a>
   </aside>
 
+  <main id="main">
   <section class="intro">
     <div class="intro-kicker">Portfolio — Mechanical Engineering</div>
     <h1>Things I've<br>designed and built.</h1>
@@ -607,7 +631,9 @@
       </div>
     </div>
 
-    <div class="project-viewer" data-model="./models/glasses-side-mount.glb">
+    <div class="project-viewer" data-model="./models/glasses-side-mount.glb"
+         role="img" tabindex="0"
+         aria-label="Interactive 3D model of the smart-glasses frame. Drag, or use the left and right arrow keys, to rotate it.">
       <div class="viewer-loading">Loading model…</div>
       <div class="viewer-frame"><span></span><span></span><span></span><span></span></div>
       <div class="viewer-hint">Drag to rotate</div>
@@ -792,6 +818,8 @@
       <span class="panel-note">Model in progress</span>
     </div>
   </article>
+
+  </main>
 
   <footer class="footer">
     <h2>Let's build something.</h2>
@@ -1031,6 +1059,18 @@
       }
       container.addEventListener('pointerup', endDrag);
       container.addEventListener('pointercancel', endDrag);
+
+      // Keyboard equivalent for the drag interaction
+      container.addEventListener('keydown', (e) => {
+        if (!model) return;
+        if (e.key === 'ArrowLeft') dragYaw -= 0.18;
+        else if (e.key === 'ArrowRight') dragYaw += 0.18;
+        else if (e.key === 'ArrowUp') dragPitch = Math.max(-1.2, dragPitch - 0.12);
+        else if (e.key === 'ArrowDown') dragPitch = Math.min(1.2, dragPitch + 0.12);
+        else return;
+        e.preventDefault();
+        if (hintEl) hintEl.classList.remove('show');
+      });
 
       // Per-viewer scroll-driven rotation: tied to how far the parent project
       // has scrolled through the viewport
