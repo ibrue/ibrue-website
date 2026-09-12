@@ -92,7 +92,6 @@
       display: block;
       width: 100%;
       height: auto;
-      background: #f0f0f0;
     }
     figcaption {
       margin-top: 10px;
@@ -144,42 +143,47 @@
 
     <div class="section-spacer"></div>
 
-    <section class="projects" id="projects" hidden>
+    <section class="projects" id="projects">
       <h2>Things I've designed:</h2>
 
       <figure>
-        <img src="images/build-glasses-concepts.png" alt="Six grayscale renders of smart-glasses concepts with transparent frames and temple-mounted electronics">
+        <img src="images/glasses-iterations.webp" width="1206" height="534" loading="lazy" decoding="async" alt="Six renders of smart-glasses concepts with transparent frames and temple-mounted electronics">
         <figcaption>Iterations of glasses - Build.ai</figcaption>
       </figure>
 
       <figure>
-        <img src="images/build-glasses-render.png" alt="Photorealistic render of black smart glasses with cameras in the front corners">
+        <img src="images/glasses-production.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Photorealistic render of black smart glasses with cameras in the front corners">
         <figcaption>Smart glasses, production design - Build.ai</figcaption>
       </figure>
 
       <figure>
-        <img src="images/build-headband.png" alt="White head-mounted wearable with a camera module and adjustable strap">
+        <img src="images/headband.webp" width="1600" height="900" loading="lazy" decoding="async" alt="White head-mounted wearable with a camera module and adjustable strap">
         <figcaption>Head-mounted capture device - Build.ai</figcaption>
       </figure>
 
       <figure>
-        <img src="images/jacks-vexu-robot.png" alt="CAD render of the JACKS VEX U competition robot with articulated arm and sponsor decals">
+        <img src="images/jacks-robot.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Render of the JACKS VEX U competition robot with articulated arm and sponsor decals">
         <figcaption>JACKS VEX U competition robot</figcaption>
       </figure>
 
       <figure>
-        <img src="images/vexu-manipulator-drawing.png" alt="CAD line drawing of a robot gripper assembly showing gear train, bearings and drive motor">
-        <figcaption>Manipulator assembly drawing</figcaption>
+        <img src="images/jacks-robot-2.webp" width="1600" height="900" loading="lazy" decoding="async" alt="The JACKS VEX U robot from a second angle, arm raised, showing the drivetrain and gripper">
+        <figcaption>JACKS VEX U competition robot, second view</figcaption>
       </figure>
 
       <figure>
-        <img src="images/drone.png" alt="Carbon-fiber quadcopter with ducted rotor guards, FPV camera and sensor module">
+        <img src="images/inspection-drone.webp" width="1504" height="846" loading="lazy" decoding="async" alt="Carbon-fiber quadcopter with ducted rotor guards, camera and sensor module">
         <figcaption>Inspection drone</figcaption>
       </figure>
 
       <figure>
-        <img src="images/combat-robot.png" alt="3lb combat robot on a workbench beside a RadioMaster transmitter and assembly tools">
+        <img src="images/combat-robot.webp" width="1600" height="1067" loading="lazy" decoding="async" alt="3lb combat robot on a workbench beside a RadioMaster transmitter and assembly tools">
         <figcaption>3lb combat robot</figcaption>
+      </figure>
+
+      <figure>
+        <img src="images/combat-robot-smile.webp" width="1200" height="1600" loading="lazy" decoding="async" alt="Carbon-fiber 3lb combat robot lettered Smile, on a workbench during assembly">
+        <figcaption>Smile, 3lb combat robot</figcaption>
       </figure>
 
       <div class="section-spacer"></div>
@@ -206,33 +210,24 @@
       <span>|</span>
       <a href="https://linkedin.com/in/ianbrueggeman" target="_blank">LinkedIn</a>
       <span>|</span>
-      <a href="https://x.com/enen_design" target="_blank">X</a>
+      <a href="https://x.com/ianbru" target="_blank">X</a>
     </p>
   </div>
 
   <script>
-    // Reveal the projects section only for images that actually loaded, so a
-    // missing file leaves no broken frame behind.
+    // Safety net: drop any figure whose image fails to load rather than leaving
+    // a broken frame, and drop the whole section if none of them resolve. The
+    // section ships visible so it still renders with JS off.
     (function() {
       const section = document.getElementById('projects');
       const figures = Array.from(section.querySelectorAll('figure'));
-      let settled = 0;
-
-      function settle(figure, ok) {
-        if (!ok) figure.hidden = true;
-        if (++settled === figures.length) {
-          section.hidden = figures.every(f => f.hidden);
-        }
-      }
 
       figures.forEach(function(figure) {
         const img = figure.querySelector('img');
-        if (img.complete) {
-          settle(figure, img.naturalWidth > 0);
-        } else {
-          img.addEventListener('load', () => settle(figure, true));
-          img.addEventListener('error', () => settle(figure, false));
-        }
+        img.addEventListener('error', function() {
+          figure.hidden = true;
+          if (figures.every(f => f.hidden)) section.hidden = true;
+        });
       });
     })();
   </script>
